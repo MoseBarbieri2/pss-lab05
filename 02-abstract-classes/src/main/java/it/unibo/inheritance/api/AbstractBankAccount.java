@@ -1,6 +1,18 @@
 package it.unibo.inheritance.api;
 
+import it.unibo.inheritance.impl.SimpleBankAccount;
+
 public abstract class AbstractBankAccount implements BankAccount{
+    protected static final double ATM_TRANSACTION_FEE = 1;
+    protected static final double MANAGEMENT_FEE = 5;
+    private final AccountHolder holder;
+    private double balance;
+    private int transactions;
+
+    protected AbstractBankAccount(AccountHolder holder) {
+        this.holder = holder;
+    }
+
     @Override
     public void chargeManagementFees(int id) {
 
@@ -8,27 +20,28 @@ public abstract class AbstractBankAccount implements BankAccount{
 
     @Override
     public void deposit(int id, double amount) {
-
+        this.transactionOp(id, amount);
     }
 
     @Override
     public void depositFromATM(int id, double amount) {
+        this.deposit(id, amount - AbstractBankAccount.ATM_TRANSACTION_FEE);
 
     }
 
     @Override
     public AccountHolder getAccountHolder() {
-        return null;
+        return this.holder;
     }
 
     @Override
     public double getBalance() {
-        return 0;
+        return this.balance;
     }
 
     @Override
     public int getTransactionsCount() {
-        return 0;
+        return this.transactions;
     }
 
     @Override
@@ -41,6 +54,7 @@ public abstract class AbstractBankAccount implements BankAccount{
 
     }
 
-    protected abstract boolean isWithDrawAllowed( double amount){
-    }
+    protected abstract boolean isWithDrawAllowed( double amount);
+    protected abstract double computeFee();
+
 }
