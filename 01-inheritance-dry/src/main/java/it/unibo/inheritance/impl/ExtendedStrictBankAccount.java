@@ -5,9 +5,7 @@ public class ExtendedStrictBankAccount extends SimpleBankAccount{
 
     public ExtendedStrictBankAccount(int id, double balance) {
         super(id, balance);
-    }
-    private boolean isWithdrawAllowed(final double amount) {
-        return getBalance() >= amount;
+        super.resetTransactions();
     }
     @Override
     public void withdraw(final int id, final double amount) {
@@ -15,18 +13,21 @@ public class ExtendedStrictBankAccount extends SimpleBankAccount{
             transactionOp(id, -amount);
         }
     }
-    private void transactionOp(final int id, final double amount) {
-        if (checkUser(id)) {
-            setBalance( getBalance() + amount);
-            this.incrementTransactions();
-        }
-    }
     @Override
     public void chargeManagementFees(final int id) {
         final double feeAmount = MANAGEMENT_FEE + getTransactionsCount() * ExtendedStrictBankAccount.TRANSACTION_FEE;
         if (checkUser(id) && isWithdrawAllowed(feeAmount)) {
-            setBalance(getBalance() - feeAmount);
-            resetTransactions();
+            super.setBalance(super.getBalance() - feeAmount);
+            super.resetTransactions();
+        }
+    }
+    private boolean isWithdrawAllowed(final double amount) {
+        return getBalance() >= amount;
+    }
+    private void transactionOp(final int id, final double amount) {
+        if (checkUser(id)) {
+            super.setBalance( super.getBalance() + amount);
+            this.incrementTransactions();
         }
     }
 }
